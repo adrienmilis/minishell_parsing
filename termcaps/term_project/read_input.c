@@ -49,40 +49,53 @@ char	*make_buffer(char *buf, char c)
 	return (buf_cpy);
 }
 
-void	print_buffer(char *buf)
+void	print_nl(char *buf)
 {
-	//printf("%s\n", buf);
 	printf("\n");
 }
 
-void	updown_event(char rd[3], t_command *begin_list)
+void	updown_event(int reset, char rd[3], t_command *begin_list)
 {
-	// static int	up = -1;
-	int					ls_len;
-	static t_command	*elem = NULL;
+	static t_command	*elem;
 
-
-	ls_len = list_len(begin_list);
+	if (reset == 1)
+		elem = NULL;
+	if (begin_list->next == NULL)
+		return ;
 	if (rd[2] == 65) // up arrow
 	{
 		if (elem == NULL)
 			elem = begin_list;
-		else
+		else if (elem->next != NULL)
 			elem = elem->next;
-		printf("%s\n", begin_list->command);
-		// if (up < ls_len - 1)
-		// 	up++;
-		// print_lst_elem(*begin_list, up);
+		if (elem->command)
+			printf("%s\n", elem->command);
 	}
 	if (rd[2] == 66) // down arrow
 	{
-		if (elem == NULL)
-			printf("\n");
-		//printf("%s\n", begin_list->command);
-		// if (up >= 0)
-		// 	up--;
-		// print_lst_elem(*begin_list, up);
+		if (elem == NULL || elem == begin_list)
+			elem = NULL;
+		else
+			elem = elem->prev;
+		if (elem)
+			printf("%s\n", elem->command);
 	}
+}
+
+/* OPTIONNEL :
+implémenter l'element temporaire :
+- quand tu ecris qqchose et puis que tu remontes dans l'historique, ca ajoute ce que tu as ecrit
+a l'historique
+- si lorsque tu remontes dans l'historique, tu executes une commande de l'historique
+(tu appuyes sur entree), alors c'est cette commande qui est ajoutee a l'historique a la place */
+
+int	enter_input(t_command **begin_list, char **buf)
+{
+	print_nl(*buf);										// execute the command (here, print a NL)
+	ft_lstadd_front(begin_list, new_elem(*buf, *begin_list));		// adds the new command to the list
+	free(*buf);
+	*buf = NULL;
+	return (1);		// reset is set to 1 so the history starts at the first command again
 }
 
 int	read_input(char **buf, t_command **begin_list)
@@ -90,26 +103,24 @@ int	read_input(char **buf, t_command **begin_list)
 	char		rd[4];
 	int			ret;
 	char		*new_buf;
+	static int	reset;
 
 	ret = read(0, &rd, 4);
 	if (ret == -1)
-		return (ret);
+		exit_free("Read error", *begin_list, NULL);
 	if (isprint(rd[0]))
 	{
 		*buf = make_buffer(*buf, rd[0]);
+		if (*buf == NULL)
+			exit_free("Malloc error", *begin_list, NULL);
 		write(1, &rd[0], 1);
 	}
 	else if (rd[0] == '\033')
-		updown_event(rd, *begin_list);
-	else if (rd[0] == 10)
 	{
-		print_buffer(*buf);			// execute the command (here, print a NL)
-		//new_buf = ft_strdup(*buf);
-		//printf("buf : %s\n", *buf);
-		ft_lstadd_front(begin_list, new_elem(*buf));			// adds the new command to the list
-		print_list(*begin_list);
-		free(*buf);
-		*buf = NULL;
+		updown_event(reset, rd, *begin_list);
+		reset = 0;
 	}
+	else if (rd[0] == 10)	// if enter is pressed
+		reset = enter_input(begin_list, buf);
 	return (ret);
 }

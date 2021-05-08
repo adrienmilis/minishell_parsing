@@ -20,6 +20,15 @@ char	*ft_strdup(char *str)
 	return (str_cpy);
 }
 
+void	exit_free(char *str, t_command *begin_list, char *buffer)
+{
+	if (buffer)
+		free(buffer);
+	if (begin_list)
+		free_list(begin_list);
+	printf("Error : %s\n", str);
+	exit(0);
+}
 
 int	main_2(char *buf, t_command **begin_list)
 {
@@ -31,34 +40,35 @@ int	main_2(char *buf, t_command **begin_list)
 	if (init_termcap() == 0)
 	{
 		if (tcgetattr(0, &s_termios) == -1)
-			return (-1);
+			exit_free("Termios error", *begin_list, NULL);
 		if (tcgetattr(0, &s_termios_backup) == -1)
-			return (-1);
+			exit_free("Termios error", *begin_list, NULL);
 		s_termios.c_lflag &= ~(ICANON);
 		s_termios.c_lflag &= ~(ECHO);
 		if (tcsetattr(0, 0, &s_termios) == -1)
-			return (-1);
+			exit_free("Termios error", *begin_list, NULL);
 		while (ret >= 0)
 			ret = read_input(&buf, begin_list);
 		if (tcsetattr(0, 0, &s_termios_backup) == -1)
-			return (-1);
+			exit_free("Termios error", *begin_list, NULL);
 	}
 	return (0);
 }
 
-int main()
+int	main(void)
 {
 	char		*buf;
 	t_command	*begin_list;
+	int			ret;
 
-	// buf = malloc(sizeof(char) * 2048);
-	// buf[0] = 0;
 	begin_list = malloc(sizeof(t_command));
+	if (begin_list == NULL)
+		exit_free("Malloc error", NULL, NULL);
 	begin_list->next = NULL;
 	begin_list->prev = NULL;
 	begin_list->command = NULL;
 	buf = NULL;
 	main_2(buf, &begin_list);
+	free_list(begin_list);
 	return (0);
 }
-
