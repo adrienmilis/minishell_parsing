@@ -1,5 +1,11 @@
 #include "terminal.h"
 
+/*	!!!!! ATTENTION
+	Notre liste chainée de commandes finit toujours par un element dont les 3 valeurs sont set à NULL
+	Cet element ne fait donc pas partie des commandes mais c'est celui-ci dont le ->next pointe vers (null)
+	et pas la derniere commande de la liste 
+	*/
+
 char	*ft_strdup(char *str)
 {
 	char	*str_cpy;
