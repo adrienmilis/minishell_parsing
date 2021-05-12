@@ -24,7 +24,7 @@ The other arguments are arguments to the command
 
 ### $ (env variables)
 
-
+- Variables can only be a set of alphanumeric characters and _ . If an env variable is followed by a character other than this one, 
 
 ### Possible errors
 
