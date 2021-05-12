@@ -2,7 +2,20 @@
 
 ## Syntax rules
 
-### Possible errors ('' and "")
+### Quotes
+
+Single-quotes ( '' ):  shall preserve the literal value of each character within the single-quotes. A single-quote cannot occur within single-quotes. If uneven number of single quotes, unvalid command. Even env variables stay as strings.
+
+Double-quotes (“”): 
+the $ shall retain its special meaning introducing parameter expansion.
+The \ shall retain its special meaning, only when followed by one of the following characters when considered special : $ “ \ 
+si plusieurs double-quotes a la suite, concatener leur resultat. (ex : echo """salut" = echo "" + echo "salut")
+
+Quotes can be anywhere in the command (in the exec, options or arguments)
+
+### Double quotes
+
+### Possible errors
 
 #### Quotes
 
@@ -16,6 +29,8 @@
 #### Pipes (|)
 
 #### Redirections (<, >, >>)
+
+### Parsing
 
 
 
