@@ -22,6 +22,7 @@ The other arguments are arguments to the command
 (ex : echo bonjour > file1 >file2 >> file3)
 - The argument to a redirection can be delimited by whitespaces, another redirection operator, pipes or semi-colons
 - If there is an input redirection AND a pipe, the input redirection wins
+- It's ok if there is no space between an argument and a redirection (echo salut>salut)
 
 ### $ (env variables)
 
@@ -65,11 +66,14 @@ and whatever is after are concatenated
 ## Method (so far)
 
 1) First split
-- Check if main command can be splitted on semicolons(first check quotes are closed, then check semi-colons)
+- Check if main command can be split on semicolons(first check quotes are closed, then check semi-colons)
 - Split the command on the right semi-colons
 - Add to the main linked list
 2) Second split 
-- Check that sub_command can be splitted on pipes (check pipes are valid)
+- Check that sub_command can be split on pipes (check pipes are valid)
 - Split on sub linked list
 3) Go through each sub_command and check if valid (check redirections)
 4) Add all elements to tab and expand env variables
+
+SPLIT :
+- When splitting, don't add spaces before or after a cmd
