@@ -50,6 +50,8 @@ and whatever is after are concatenated
 
 #### Pipes (|)
 
+- 
+
 #### Redirections (<, >, >>)
 
 - Input redirection from a file that doesn't exist
@@ -60,10 +62,12 @@ and whatever is after are concatenated
 
 ## Method (so far)
 
-1) Check if command can be splitted (first, quotes are closed, then check semi-colons)
-2) Split the command on the right semi-colons
-3) Go through each sub_command
-4) 2 modes : in & out of quotes. 
-- if double quotes : expand environment variables
-- if in simple quotes : pass
-- else, check if pipes and redirections are valid
+1) First split
+- Check if main command can be splitted on semicolons(first check quotes are closed, then check semi-colons)
+- Split the command on the right semi-colons
+- Add to the main linked list
+2) Second split 
+- Check that sub_command can be splitted on pipes (check pipes are valid)
+- Split on sub linked list
+3) Go through each sub_command and check if valid (check redirections)
+4) Add all elements to tab and expand env variables
