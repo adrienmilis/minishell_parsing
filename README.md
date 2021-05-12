@@ -21,6 +21,7 @@ The other arguments are arguments to the command
 - If there are several redirections in a row, all files are created (if forward redirection). However, the redirection goes only to the last file
 (ex : echo bonjour > file1 >file2 >> file3)
 - The argument to a redirection can be delimited by whitespaces, another redirection operator, pipes or semi-colons
+- If there is an input redirection AND a pipe, the input redirection wins
 
 ### $ (env variables)
 
@@ -50,7 +51,8 @@ and whatever is after are concatenated
 
 #### Pipes (|)
 
-- 
+- No pipe at the beginning or end of a command (even with whitespaces)
+- Two or more in a row (even separated by whitespaces)
 
 #### Redirections (<, >, >>)
 
