@@ -24,7 +24,18 @@ The other arguments are arguments to the command
 
 ### $ (env variables)
 
-- Variables can only be a set of alphanumeric characters and _ . If an env variable is followed by a character other than this one, 
+- Variables can only be a set of alphanumeric characters and _ . If an env variable is followed by a character other than those, the expanded variable
+and whatever is after are concatenated
+- If the specified environment variable doesn't exist, it is ignored (not replaced by an empty string)
+
+### Built-ins and executables
+
+- They are not case-sensitive
+
+### Other
+
+- Spaces that are escaped (\ ) are not considered argument separators, but simply characters
+- Always print a space between two arguments, even if one of the arguments is an empty string
 
 ### Possible errors
 
