@@ -24,6 +24,8 @@ typedef struct s_command
 char	**ft_split(const char *str, char c);
 
 // parser.c
-int		is_valid_input(char *cmd);
+int		semicolons_valid(char *cmd);
+int		quotes_are_closed(char *cmd);
+
 
 #endif
