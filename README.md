@@ -65,15 +65,12 @@ and whatever is after are concatenated
 
 ## Method (so far)
 
-1) First split
-- Check if main command can be split on semicolons(first check quotes are closed, then check semi-colons)
-- Split the command on the right semi-colons
-- Add to the main linked list
-2) Second split 
-- Check that sub_command can be split on pipes (check pipes are valid)
-- Split on sub linked list
-3) Go through each sub_command and check if valid (check redirections)
-4) Add all elements to tab and expand env variables
+1) Check quotes are matched, then check semi-colons
+2) Start parsing. In the while, 2 functions :
+- One to use if we're in quotes
+- One to use if we're out of quotes
+3) Return the parsed list
 
-SPLIT :
-- When splitting, don't add spaces before or after a cmd
+Soit envoyer le i en parametre et le mettre static, soit avoir la structure en static et set les valeurs a 0 (sauf le i) avant de renvoyer la linked list
+
+- Split on sub linked list
