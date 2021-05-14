@@ -54,6 +54,7 @@ and whatever is after are concatenated
 
 - No pipe at the beginning or end of a command (even with whitespaces)
 - Two or more in a row (even separated by whitespaces)
+- No pipe right after a semicolon
 
 #### Redirections (<, >, >>)
 
@@ -71,6 +72,11 @@ and whatever is after are concatenated
 - One to use if we're out of quotes
 3) Return the parsed list
 
-Soit envoyer le i en parametre et le mettre static, soit avoir la structure en static et set les valeurs a 0 (sauf le i) avant de renvoyer la linked list
+IF OUT QUOTES : 
+- append OR add new arg while (!is_reserved_char (<, >, ;, |)) AND while (!is_quote) AND while (!is_space)
 
-- Split on sub linked list
+if (unescaped space) : new arg
+if (reserved char) :
+- if (|) : add new elem to list 
+- if (;) : return our list
+- if (> < >>) : modify input, output and double_greater with next word (fonction get_next_word() ???)
