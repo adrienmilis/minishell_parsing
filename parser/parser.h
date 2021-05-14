@@ -14,18 +14,42 @@ typedef struct s_pipe_cmd
 	struct s_pipe_cmd	*next;
 }				t_pipe_cmd;
 
-typedef struct s_command
+typedef struct s_pars
 {
-	t_pipe_cmd			*pipe_cmd_start;	// début de la liste chainee de pipe cmds
-	struct s_command	*next;
-}				t_command;
+	int in_s_quotes;
+	int	in_d_quotes;
+	int	semicolon;
+}				t_pars;
 
 // ft_split.c
 char	**ft_split(const char *str, char c);
 
+// errors.c
+void	error_exit(char *msg);
+
 // parser.c
+int			append_arg(char **args, char *word);
+t_pipe_cmd	*parser(char *cmd);
+
+// utils.c
 int		semicolons_valid(char *cmd);
 int		quotes_are_closed(char *cmd);
+int		is_space(char c);
+void 	set_quotes(int i, char *cmd, t_pars *p);
+void	init_pars_struct(t_pars *p);
+int		pipes_valid(char *cmd);
+void	check_syntax(char *cmd);
+int		is_reserved_word(char c);
 
+// linked_list.c
+
+t_pipe_cmd	*ft_lstlast(t_pipe_cmd *begin_list);
+void		ft_lstadd_back(t_pipe_cmd **begin_list, t_pipe_cmd *new_elem);
+t_pipe_cmd	*new_elem();
+void		print_list(t_pipe_cmd *begin_list);
+
+// libft.c
+
+int		ft_strlen(char *str);
 
 #endif
