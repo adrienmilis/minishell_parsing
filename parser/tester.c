@@ -1,6 +1,22 @@
 #include "parser.h"
 
-void semicolon_tester()
+int nb_of_tests = 0;
+
+static int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != 0 && s2[i] != 0)
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (s1[i] - s2[i]);
+}
+
+static void semicolon_tester()
 {
 	printf("---SEMICOLONS TESTER---\n");
 	char 	valid_cmds[50][100] = 
@@ -41,9 +57,10 @@ void semicolon_tester()
 			printf("Should be unvalid : [%s]\n", unvalid_cmds[i]);
 		i++;
 	}
+	nb_of_tests += nb_of_invalids + nb_of_valids;
 }
 
-void	quotes_tester()
+static void	quotes_tester()
 {
 	printf("---QUOTES TESTER---\n");
 	char 	valid_cmds[50][100] = 
@@ -83,9 +100,10 @@ void	quotes_tester()
 			printf("Should be unvalid : [%s]\n", unvalid_cmds[i]);
 		i++;
 	}
+	nb_of_tests += nb_of_invalids + nb_of_valids;
 }
 
-void	pipe_tester()
+static void	pipe_tester()
 {
 	printf("---PIPES TESTER---\n");
 	char 	valid_cmds[50][100] = 
@@ -104,11 +122,13 @@ void	pipe_tester()
 		"echo bonjour || echo salut",
 		"echo bonjour ||",
 		"echo bonjour || echo salut",
-		"echo bonjour ; | echo salut"
+		"echo bonjour ; | echo salut",
+		"echo bonjour > | echo salut",
+		"> | echo salut"
 	};
 	int i = 0;
 	int	nb_of_valids = 7;
-	int	nb_of_invalids = 5;
+	int	nb_of_invalids = 7;
 	while (i < nb_of_valids)
 	{
 		if (!pipes_valid(valid_cmds[i]))
@@ -122,6 +142,66 @@ void	pipe_tester()
 			printf("Should be unvalid : [%s]\n", unvalid_cmds[i]);
 		i++;
 	}
+	nb_of_tests += nb_of_invalids + nb_of_valids;
+}
+
+static void gnw_tester()
+{
+	char	*word;
+	t_pars	p;
+	printf("---GNW TESTER---\n");
+	
+	p.i = 5;
+	word = get_next_word("ceci est test", &p);
+	if (ft_strcmp(word, "est"))
+		printf("Error test 1 ; word is [%s]\n", word);
+
+	p.i = 9;
+	word = get_next_word("ceci est ungros>test", &p);
+	if (ft_strcmp(word, "ungros"))
+		printf("Error test 2 ; word is [%s]\n", word);
+
+	p.i = 9;
+	word = get_next_word("ceci est ungros<test", &p);
+	if (ft_strcmp(word, "ungros"))
+		printf("Error test 3 ; word is [%s]\n", word);
+
+	p.i = 9;
+	word = get_next_word("ceci est ungros;test", &p);
+	if (ft_strcmp(word, "ungros"))
+		printf("Error test 4 ; word is [%s]\n", word);
+
+	p.i = 9;
+	word = get_next_word("ceci est ungros|test", &p);
+	if (ft_strcmp(word, "ungros"))
+		printf("Error test 5 ; word is [%s]\n", word);
+
+	p.i = 0;
+	word = get_next_word("ceci\\ est un test", &p);
+	if (ft_strcmp(word, "ceci est"))
+		printf("Error test 6 ; word is [%s]\n", word);
+
+	p.i = 5;
+	word = get_next_word("ceci \\\"est test" , &p);
+	if (ft_strcmp(word, "\"est"))
+		printf("Error test 7 ; word is [%s]\n", word);
+
+	p.i = 5;
+	word = get_next_word("ceci \\;est test" , &p);
+	if (ft_strcmp(word, ";est"))
+		printf("Error test 8 ; word is [%s]\n", word);
+
+	p.i = 0;
+	word = get_next_word("\\<ceci \\;est test" , &p);
+	if (ft_strcmp(word, "<ceci"))
+		printf("Error test 9 ; word is [%s]\n", word);
+
+	p.i = 5;
+	word = get_next_word("ceci      etretest" , &p);
+	if (ft_strcmp(word, "etretest"))
+		printf("Error test 10 ; word is [%s]\n", word);
+
+	nb_of_tests += 10;
 }
 
 int main()
@@ -129,4 +209,7 @@ int main()
 	semicolon_tester();
 	quotes_tester();
 	pipe_tester();
+	printf("\n");
+	gnw_tester();
+	printf("\n[%d tests]\n", nb_of_tests);
 }

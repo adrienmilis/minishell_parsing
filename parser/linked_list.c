@@ -49,11 +49,17 @@ void	print_list(t_pipe_cmd *begin_list)
 	while (elem)
 	{
 		i = 0;
-		while (elem->cmd[i])
-		{	
-			printf("[%d] : %s\n", i, elem->cmd[i]);
-			i++;
+		if (elem->cmd)
+		{
+			while (elem->cmd[i])
+			{	
+				printf("[%d] : [%s]\n", i, elem->cmd[i]);
+				i++;
+			}
 		}
+		printf("input : [%s]\n", elem->input);
+		printf("output : [%s]\n", elem->output);
+		printf(">> : %d\n", elem->double_greater);
 		printf("----------\n");
 		elem = elem->next;
 	}

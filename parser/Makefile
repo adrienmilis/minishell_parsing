@@ -1,5 +1,23 @@
 all:
-	gcc parser.c utils.c main.c errors.c linked_list.c libft.c
+	gcc -g parser.c \
+	utils.c \
+	main.c \
+	errors.c \
+	linked_list.c \
+	libft.c \
+	add_arguments.c \
+	check_chars.c \
+	check_syntax.c \
+	parse_out_quotes.c
 
 test:
-	gcc parser.c utils.c tester.c errors.c linked_list.c libft.c
+	gcc -g parser.c \
+	utils.c \
+	tester.c \
+	errors.c \
+	linked_list.c \
+	libft.c \
+	add_arguments.c \
+	check_chars.c \
+	check_syntax.c \
+	parse_out_quotes.c

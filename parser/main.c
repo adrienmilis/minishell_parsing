@@ -2,19 +2,8 @@
 
 int main(int argc, char **argv)
 {
-	int i = 0;
+	t_pipe_cmd	*pipe_cmd;
 
-	char **tab;
-	tab = malloc(3 * sizeof(char*));
-	tab[2] = 0;
-	tab[0] = "hello";
-	tab[1] = "salut";
-	char *word = " coucou";
-	while (tab[i])
-		printf("%s\n", tab[i++]);
-	printf("-----\n");
-	append_arg(tab, word);
-	i = 0;
-	while (tab[i])
-		printf("%s\n", tab[i++]);
+	pipe_cmd = parser("< test < allo > kikoo >> salut > mais bonjour echo salut  < salut   |t a  d z < echo > salut | allo test cv | cmt hello");
+	free_pipe_cmd(pipe_cmd);
 }
