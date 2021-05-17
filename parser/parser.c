@@ -2,8 +2,7 @@
 
 void	parse_in_quotes(t_pars *p, t_pipe_cmd *pipe_cmd, char *cmd)
 {
-	/* si on ne commence pas par un whitespace, il faut append au dernier argument (sauf si i == 0). 
-	Sinon, en créer un nouveau */
+	
 
 	if ((!p->in_d_quotes && !p->in_s_quotes) || cmd[p->i])
 		return ;

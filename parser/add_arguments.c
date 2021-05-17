@@ -1,32 +1,37 @@
 #include "parser.h"
 
-int	add_argument(t_pipe_cmd *p_cmd_curr, t_pars *p, char *cmd, char **tmp)
+void	add_argument(t_pipe_cmd *last, t_pipe_cmd *p_cmd_start, t_pars *p, char *cmd)
 {
 	int		i;
 	char	**new_args;
+	char	**tmp;
+	char	*word;
 
 	i = 0;
-	if (p_cmd_curr->cmd)
-		while (p_cmd_curr->cmd[i++])
+	if (last->cmd)
+		while (last->cmd[i++])
 			i++;
 	new_args = malloc(sizeof(char *) * (i + 2));
 	if (!new_args)
-		return (0);
+		error_exit("malloc error", p_cmd_start);
 	i = 0;
-	if (p_cmd_curr->cmd)
-		while (p_cmd_curr->cmd[i])
+	if (last->cmd)
+		while (last->cmd[i])
 		{
-			new_args[i] = p_cmd_curr->cmd[i];
+			new_args[i] = last->cmd[i];
 			i++;
 		}
-	new_args[i] = get_next_word(cmd, p);
-	if (!new_args[i])
-		return (0);
+	word = get_next_word(cmd, p, p_cmd_start);
+	if (!word)
+	{
+		free(new_args);
+		return ;
+	}
+	new_args[i] = word;
 	new_args[i + 1] = 0;
-	tmp = p_cmd_curr->cmd;
-	p_cmd_curr->cmd = new_args;
+	tmp = last->cmd;
+	last->cmd = new_args;
 	free(tmp);
-	return (1);
 }
 
 int	append_arg(t_pipe_cmd *last, char *word)	// proteger le retour
@@ -58,20 +63,19 @@ int	append_arg(t_pipe_cmd *last, char *word)	// proteger le retour
 	return (1);
 }
 
-char	*copy_next_word(char *cmd, t_pars *p, int word_size)
+char	*copy_next_word(char *cmd, t_pars *p, int word_size, t_pipe_cmd *p_cmd_start)
 {
 	char	*word;
 	int		j;
 
 	word = malloc(sizeof(char) * word_size);
 	if (!word)
-		return (NULL);
+		error_exit("malloc error", p_cmd_start);
 	j = 0;
-	while (!is_r_space(&cmd[p->i], p->i) && !is_r_resvd_char(&cmd[p->i], p->i)
+	while (!is_r_space(&cmd[p->i], p->i) && !is_r_resvd_char(&cmd[p->i], p->i, 1)
 		&& !is_r_quote(&cmd[p->i], p->i) && cmd[p->i])
 	{
-		if (!(cmd[p->i] == '\\' && (is_space(cmd[p->i + 1])
-			|| is_reserved_char(cmd[p->i + 1]) || is_quote(cmd[p->i + 1]))))
+		if (!(cmd[p->i] == '\\' && !is_unesc_char(&cmd[p->i + 1], p->i + 1)))
 			word[j++] = cmd[p->i];
 		(p->i)++;
 	}
@@ -79,22 +83,27 @@ char	*copy_next_word(char *cmd, t_pars *p, int word_size)
 	return (word);
 }
 
-char	*get_next_word(char *cmd, t_pars *p)	// proteger le retour
+char	*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start)	// renvoie NULL si on n'a rien trouve (mauvaise $var)
 {
 	char	*word;
 	int		j;
-	int		escaped_space;
+	int		escaped;
 
-	escaped_space = 0;
+	escaped = 0;
 	while (is_r_space(&cmd[p->i], p->i))
 		p->i += 1;
-	j = p->i;
-	while (!is_r_space(&cmd[j], j) && !is_r_resvd_char(&cmd[j], j) && !is_r_quote(&cmd[j], j) && cmd[j])
+	if (cmd[p->i] == '$')
 	{
-		if (is_space(cmd[j]) || is_reserved_char(cmd[j]))
-			escaped_space++;
+		word = get_variable(p, cmd, p_cmd_start);
+		return (word);
+	}
+	j = p->i;
+	while (!is_r_space(&cmd[j], j) && !is_r_resvd_char(&cmd[j], j, 1) && !is_r_quote(&cmd[j], j) && cmd[j])
+	{
+		if (!is_unesc_char(&cmd[j], j))
+			escaped++;
 		j++;
 	}
-	word = copy_next_word(cmd, p, j - escaped_space - p->i + 1);
-	return (word); // NULL en cas d'erreur
+	word = copy_next_word(cmd, p, j - escaped - p->i + 1, p_cmd_start);
+	return (word);
 }

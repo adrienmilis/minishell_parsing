@@ -6,6 +6,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
+char	**myenv;
+
 typedef struct s_pipe_cmd
 {
 	char				**cmd;
@@ -41,9 +43,9 @@ void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 t_pipe_cmd	*parser(char *cmd);
 
 // add_arguments.c
-int			add_argument(t_pipe_cmd *p_cmd_curr, t_pars *p, char *cmd, char **tmp);
-char		*get_next_word(char *cmd, t_pars *p);	// proteger le retour
-char		*copy_next_word(char *cmd, t_pars *p, int word_size);
+void		add_argument(t_pipe_cmd *last, t_pipe_cmd *p_cmd_start, t_pars *p, char *cmd);
+char		*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start);
+char		*copy_next_word(char *cmd, t_pars *p, int word_size, t_pipe_cmd *p_cmd_start);
 int			append_arg(t_pipe_cmd *lasts, char *word);
 
 // utils.c
@@ -61,10 +63,11 @@ void	check_syntax(char *cmd);
 // check_chars.c
 int		is_space(char c);
 int		is_r_space(char *c, int i);
-int		is_reserved_char(char c);
-int		is_r_resvd_char(char *c, int i);
+int		is_reserved_char(char c, int dollar);
+int		is_r_resvd_char(char *c, int i, int dollar);
 int		is_quote(char c);
 int		is_r_quote(char *c, int i);
+int		is_unesc_char(char *c, int i);
 
 // linked_list.c
 t_pipe_cmd	*ft_lstlast(t_pipe_cmd *begin_list);
@@ -73,6 +76,21 @@ t_pipe_cmd	*new_elem();
 void		print_list(t_pipe_cmd *begin_list);
 
 // libft.c
+char	*ft_strdup_len(char *str, int len);
+char	*ft_strdup(char *str);
 int		ft_strlen(char *str);
+int		is_number(char c);
+int		is_letter(char c);
+int		valid_var_char(char c);
+
+// env.c 
+int		strcmp_env(char *s1, char *s2);
+char	**new_env(char **env);
+
+// env_vars.c
+char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
+char	*get_env_var(int index);
+char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
+char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
 
 #endif

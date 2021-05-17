@@ -8,7 +8,9 @@ all:
 	add_arguments.c \
 	check_chars.c \
 	check_syntax.c \
-	parse_out_quotes.c
+	parse_out_quotes.c \
+	env.c \
+	env_vars.c
 
 test:
 	gcc -g parser.c \
@@ -20,4 +22,6 @@ test:
 	add_arguments.c \
 	check_chars.c \
 	check_syntax.c \
-	parse_out_quotes.c
+	parse_out_quotes.c \
+	env.c \
+	env_vars.c

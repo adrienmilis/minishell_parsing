@@ -7,7 +7,7 @@ void	real_sign2(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd, char sign)
 	int			fd;
 
 	last = ft_lstlast(p_cmd_start);
-	word = get_next_word(cmd, p);
+	word = get_next_word(cmd, p, p_cmd_start);
 	if (!word)
 		error_exit("malloc error", p_cmd_start);
 	if (sign == '>')
@@ -47,6 +47,11 @@ void	real_sign(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 	real_sign2(p, p_cmd_start, cmd, sign);
 }
 
+void	expand_variable(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
+{
+
+}
+
 void	reserved_chars(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 {
 	t_pipe_cmd	*n_elem;
@@ -75,7 +80,7 @@ void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 	char		*word;
 
 	last_elem = ft_lstlast(p_cmd_start);
-	if (is_r_resvd_char(&cmd[p->i], p->i))
+	if (is_r_resvd_char(&cmd[p->i], p->i, 0))
 		reserved_chars(p, p_cmd_start, cmd);
 	else if (is_r_space(&cmd[p->i], p->i))
 	{
@@ -86,13 +91,13 @@ void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 		p->in_s_quotes = 1;
 	else if (cmd[p->i] == '"')
 		p->in_d_quotes = 1;
-	else if (p->i != 0 && is_r_quote(&cmd[p->i - 1], p->i - 1)) // append si c'est direct le debut d'un mot qd on rentre ds la fonction SAUF SI on apl la fonction apres un unescaped space !!
+	else if (p->i != 0 && !is_r_space(&cmd[p->i - 1], p->i - 1))
 	{
-		word = get_next_word(cmd, p);
-		if (!word || !append_arg(last_elem, word))
-			error_exit("malloc error", p_cmd_start);
+		word = get_next_word(cmd, p, p_cmd_start);
+		if (word)
+			if (!append_arg(last_elem, word))
+				error_exit("malloc error", p_cmd_start);
 	}
 	else	// on est au debut d'un mot et pas de quote avant
-		if (!add_argument(last_elem, p, cmd, NULL))
-			error_exit("malloc error", p_cmd_start);
+		add_argument(last_elem, p_cmd_start, p, cmd);
 }

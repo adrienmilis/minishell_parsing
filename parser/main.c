@@ -1,9 +1,14 @@
 #include "parser.h"
 
-int main(int argc, char **argv)
+char	**myenv;
+
+int main(int argc, char **argv, char **env)
 {
 	t_pipe_cmd	*pipe_cmd;
 
-	pipe_cmd = parser("< test < allo > kikoo >> salut > mais bonjour echo salut  < salut   |t a  d z < echo > salut | allo test cv | cmt hello");
+	myenv = new_env(env);
+	pipe_cmd = parser("echo \\\\\\\\;");
+	// for (int k = 0; myenv[k] ; k++)
+	// 	printf("%s\n", myenv[k]);
 	free_pipe_cmd(pipe_cmd);
 }
