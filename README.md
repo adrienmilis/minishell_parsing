@@ -10,7 +10,8 @@ Double-quotes (“”):
 
 - the $ shall retain its special meaning introducing parameter expansion.
 - The \ shall retain its special meaning, only when followed by one of the following characters when considered special : $ “ \ 
-- si plusieurs double-quotes a la suite, concatener leur resultat. (ex : echo """salut" = echo "" + echo "salut")
+
+Si plusieurs quotes (double ou simple) a la suite, concatener leur resultat. (ex : echo """salut" = echo "" + echo "salut")
 
 Quotes can be anywhere in the command (in the exec, options or arguments)
 
@@ -72,7 +73,7 @@ and whatever is after are concatenated
 - One to use if we're out of quotes
 3) Return the parsed list
 
-IF OUT QUOTES : 
+**OUT QUOTES**
 - append OR add new arg while (!is_reserved_char (<, >, ;, |)) AND while (!is_quote) AND while (!is_space)
 
 if (unescaped space) : on rappelle la fct (avec append == 0)
@@ -82,4 +83,8 @@ if (char) : new arg OR append (en fct de la variable append)
 if (reserved char) :
 - if (|) : add new elem to list 
 - if (;) : return our list
-- if (> < >>) : modify input, output and double_greater with next word (fonction get_next_word() ???)
+- if (> < >>) : modify input, output and double_greater with next word (fonction get_next_word())
+
+**IN QUOTES**
+
+
