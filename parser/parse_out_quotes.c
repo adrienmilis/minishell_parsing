@@ -95,6 +95,4 @@ void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 	else	// on est au debut d'un mot et pas de quote avant
 		if (!add_argument(last_elem, p, cmd, NULL))
 			error_exit("malloc error", p_cmd_start);
-	if (p->in_d_quotes == 1 || p->in_s_quotes == 1 || p->semicolon == 1 || cmd[p->i])
-		return ;
 }
