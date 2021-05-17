@@ -75,7 +75,10 @@ and whatever is after are concatenated
 IF OUT QUOTES : 
 - append OR add new arg while (!is_reserved_char (<, >, ;, |)) AND while (!is_quote) AND while (!is_space)
 
-if (unescaped space) : new arg
+if (unescaped space) : on rappelle la fct (avec append == 0)
+
+if (char) : new arg OR append (en fct de la variable append)
+
 if (reserved char) :
 - if (|) : add new elem to list 
 - if (;) : return our list
