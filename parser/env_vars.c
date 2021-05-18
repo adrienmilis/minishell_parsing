@@ -1,30 +1,32 @@
 #include "parser.h"
 
-char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
+char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, char *tmp)
 {
 	char	*word;
 	int		i;
 	int		j;
-	char	*tmp_word;
+	// char	*tmp_word;
 
 	if (is_space(cmd[p->i]) || cmd[p->i] == 0)
 	{
-		tmp_word = ft_strdup("$");
-		if (!tmp_word)
-			error_exit("malloc error", p_cmd_start);
-		return (tmp_word);
+		if (tmp)
+			free (tmp);
+		tmp = ft_strdup("$");
+		if (!tmp)
+			error_exit("malloc error", p_begin);
+		return (tmp);
 	}
-	tmp_word = get_next_word(cmd, p, p_cmd_start);
-	word = malloc(sizeof(char) * (ft_strlen(tmp_word) + 2));
+	// tmp_word = get_next_word(cmd, p, p_cmd_start);
+	word = malloc(sizeof(char) * (ft_strlen(tmp) + 2));
 	if (!word)
-		error_exit("malloc error", p_cmd_start);
+		error_exit("malloc error", p_begin);
 	i = 1;
 	j = 0;
 	word[0] = '$';
-	while (tmp_word[i - 1])
-		word[i++] = tmp_word[j++];
+	while (tmp[i - 1])
+		word[i++] = tmp[j++];
 	word[i] = 0;
-	free(tmp_word);
+	free(tmp);
 	return (word);
 }
 
@@ -67,9 +69,23 @@ char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
 	return (var_value);
 }
 
-char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
+char	*gnw_double_quotes(t_pars *p, char *cmd, t_pipe_cmd *p_begin)
 {
-	char	*tmp_word;
+	char	*word;
+	int		start;
+
+	start = p->i;
+	while (!is_space(cmd[p->i]) && cmd[p->i] != '"')
+		p->i++;
+	word = ft_strdup_len(cmd + start, p->i - start);
+	if (!word)
+		error_exit("malloc error", p_begin);
+	return (word);
+}
+
+char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quotes)
+{
+	char	*tmp;
 	char	*word;
 
 	p->i += 1;
@@ -79,8 +95,14 @@ char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
 		return (NULL);
 	}
 	if (!valid_var_char(cmd[p->i]))
-		word = unvalid_var_name(p, cmd, p_cmd_start);
+	{
+		if (d_quotes == 1)	// gnw jusque espace ou ""
+			tmp = gnw_double_quotes(p, cmd, p_begin);
+		else	// gnw classique
+			tmp = get_next_word(cmd, p, p_begin);
+		word = unvalid_var_name(p, cmd, p_begin, tmp);
+	}
 	else
-		word = valid_var_name(p, cmd, p_cmd_start);
+		word = valid_var_name(p, cmd, p_begin);
 	return (word);
 }

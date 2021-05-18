@@ -1,6 +1,7 @@
 #include "parser.h"
 
 int nb_of_tests = 0;
+char **myenv;
 
 static int	ft_strcmp(char *s1, char *s2)
 {
@@ -253,7 +254,7 @@ static void gnw_tester()
 	word = get_next_word("ceci est ungros$test", &p, NULL);
 	if (ft_strcmp(word, "ungros"))
 		printf("Error test 11 ; word is [%s]\n", word);
-	
+
 	p.i = 9;
 	word = get_next_word("ceci est ungros\\$test", &p, NULL);
 	if (ft_strcmp(word, "ungros$test"))
@@ -296,14 +297,15 @@ static void gnw_tester()
 
 	p.i = 5;
 	word = get_next_word("echo $salut test", &p, NULL);
-	if (ft_strcmp(word, ""))
+	if (ft_strcmp(word, NULL))
 		printf("Error test 20 ; word is [%s]\n", word);
 
-	nb_of_tests += 18;
+	nb_of_tests += 20;
 }
 
-int main()
+int main(int argc, char **argv, char **env)
 {
+	myenv = new_env(env);
 	semicolon_tester();
 	quotes_tester();
 	pipe_tester();

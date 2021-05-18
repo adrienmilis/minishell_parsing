@@ -10,7 +10,8 @@ all:
 	check_syntax.c \
 	parse_out_quotes.c \
 	env.c \
-	env_vars.c
+	env_vars.c \
+	simple_quotes.c
 
 test:
 	gcc -g parser.c \
@@ -24,4 +25,5 @@ test:
 	check_syntax.c \
 	parse_out_quotes.c \
 	env.c \
-	env_vars.c
+	env_vars.c \
+	simple_quotes.c

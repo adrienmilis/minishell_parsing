@@ -37,16 +37,16 @@ void	error_exit(char *msg, t_pipe_cmd *begin_list);
 void	real_sign2(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd, char sign);
 void	real_sign(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 void	reserved_chars(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
-void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
+void	out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 
 // parser.c
 t_pipe_cmd	*parser(char *cmd);
 
 // add_arguments.c
-void		add_argument(t_pipe_cmd *last, t_pipe_cmd *p_cmd_start, t_pars *p, char *cmd);
+void		add_argument(char *word, t_pipe_cmd *p_begin, t_pars *p, char *cmd);
 char		*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start);
 char		*copy_next_word(char *cmd, t_pars *p, int word_size, t_pipe_cmd *p_cmd_start);
-int			append_arg(t_pipe_cmd *lasts, char *word);
+int			append_arg(t_pipe_cmd *lasts, char *word, char *tmp);
 
 // utils.c
 t_pipe_cmd	*init_pipe_list();
@@ -76,6 +76,7 @@ t_pipe_cmd	*new_elem();
 void		print_list(t_pipe_cmd *begin_list);
 
 // libft.c
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup_len(char *str, int len);
 char	*ft_strdup(char *str);
 int		ft_strlen(char *str);
@@ -88,9 +89,13 @@ int		strcmp_env(char *s1, char *s2);
 char	**new_env(char **env);
 
 // env_vars.c
-char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
+char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, char *tmp);
 char	*get_env_var(int index);
 char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
-char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
+char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quotes);
+
+// simple_quotes.c
+void	arg_simple_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
+void	in_simple_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 
 #endif

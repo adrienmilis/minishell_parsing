@@ -74,18 +74,16 @@ void	reserved_chars(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 	}
 }
 
-void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
+void	out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 {
-	t_pipe_cmd	*last_elem;
 	char		*word;
 
-	last_elem = ft_lstlast(p_cmd_start);
 	if (is_r_resvd_char(&cmd[p->i], p->i, 0))
 		reserved_chars(p, p_cmd_start, cmd);
 	else if (is_r_space(&cmd[p->i], p->i))
 	{
 		p->i += 1;
-		parse_out_quotes(p, p_cmd_start, cmd);
+		out_quotes(p, p_cmd_start, cmd);
 	}
 	else if (cmd[p->i] == '\'')
 		p->in_s_quotes = 1;
@@ -95,9 +93,12 @@ void	parse_out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 	{
 		word = get_next_word(cmd, p, p_cmd_start);
 		if (word)
-			if (!append_arg(last_elem, word))
+			if (!append_arg(ft_lstlast(p_cmd_start), word, NULL))
 				error_exit("malloc error", p_cmd_start);
 	}
 	else	// on est au debut d'un mot et pas de quote avant
-		add_argument(last_elem, p_cmd_start, p, cmd);
+	{
+		word = get_next_word(cmd, p, p_cmd_start);
+		add_argument(word, p_cmd_start, p, cmd);
+	}
 }

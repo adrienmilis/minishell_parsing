@@ -1,5 +1,31 @@
 #include "parser.h"
 
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*str_cat;
+	int		i;
+	int		j;
+
+	if (s1 == NULL)
+		s1 = ft_strdup("");
+	if (s2 == NULL)
+		s2 = ft_strdup("");
+	if (!(str_cat = malloc((ft_strlen((char*)s1) +
+			ft_strlen((char*)s2) + 1) * sizeof(char))))
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s1[j])
+		str_cat[i++] = s1[j++];
+	j = 0;
+	while (s2[j])
+		str_cat[i++] = s2[j++];
+	str_cat[i] = '\0';
+	free(s1);
+	free(s2);
+	return (str_cat);
+}
+
 char	*ft_strdup_len(char *str, int len)
 {
 	char	*str_cpy;
@@ -43,7 +69,7 @@ int	ft_strlen(char *str)
 	int	i;
 
 	if (str == NULL)
-		return (-1);
+		return (0);
 	i = 0;
 	while (str[i])
 		i++;
