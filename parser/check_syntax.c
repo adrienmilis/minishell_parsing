@@ -1,21 +1,21 @@
 #include "parser.h"
 
-void set_quotes(int i, char *cmd, t_pars *p)
+void	set_quotes(int i, char *cmd, t_pars *p)
 {
-	if (!p->in_s_quotes && !p->in_d_quotes)			// si on est ni dans simple ni dans double
+	if (!p->in_s_quotes && !p->in_d_quotes)
 	{
-		if (cmd[i] == '\'' && (i == 0 || cmd[i - 1] != '\\'))	// si c'est une vraie simple
+		if (is_unesc_char(&cmd[i], i) && cmd[i] == '\'')
 			p->in_s_quotes = 1;
-		else if (cmd[i] == '\"' && (i == 0 || cmd[i - 1] != '\\')) // si c'est une vraie double
+		else if (is_unesc_char(&cmd[i], i) && cmd[i] == '\"')
 			p->in_d_quotes = 1;
 	}
-	else if (p->in_s_quotes && !p->in_d_quotes)	// si on est dans des simple quotes
+	else if (p->in_s_quotes && !p->in_d_quotes)
 	{
-		if (cmd[i] == '\'' && (i == 0 || cmd[i - 1] != '\\'))	// si c'est une vraie simple
+		if (is_unesc_char(&cmd[i], i) && cmd[i] == '\'')
 			p->in_s_quotes = 0;
 	}
-	else if (!p->in_s_quotes && p->in_d_quotes)	// si on est dans des double
-		if (cmd[i] == '\"' && (i == 0 || cmd[i - 1] != '\\')) // si c'est une vraie double
+	else if (!p->in_s_quotes && p->in_d_quotes)
+		if (is_unesc_char(&cmd[i], i) && cmd[i] == '\"')
 			p->in_d_quotes = 0;
 }
 
@@ -29,7 +29,7 @@ int	semicolons_valid(char *cmd)
 
 	i = -1;
 	no_semicolon = 1;
-	init_pars_struct(&p);
+	init_pars_struct(&p, 1);
 	while (cmd[++i])
 	{
 		set_quotes(i, cmd, &p);
@@ -54,7 +54,7 @@ int	pipes_valid(char *cmd)
 
 	i = -1;
 	no_pipe = 1;
-	init_pars_struct(&p);
+	init_pars_struct(&p, 1);
 	while (cmd[++i])
 	{
 		set_quotes(i, cmd, &p);
@@ -77,7 +77,7 @@ int	quotes_are_closed(char *cmd)
 	t_pars	p;
 
 	i = -1;
-	init_pars_struct(&p);
+	init_pars_struct(&p, 1);
 	while (cmd[++i])
 		set_quotes(i, cmd, &p);
 	if (p.in_s_quotes != 0 || p.in_d_quotes != 0)

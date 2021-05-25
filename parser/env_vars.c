@@ -1,55 +1,61 @@
 #include "parser.h"
 
-char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, char *tmp)
+char	*gnw_double_quotes(t_pars *p, char *cmd, t_pipe_cmd *p_begin)
+{
+	char	*word;
+	int		start;
+
+	start = p->i;
+	while (!is_space(cmd[p->i]) && cmd[p->i] != '"')
+		p->i++;
+	word = ft_strdup_len(cmd + start, p->i - start);
+	if (!word)
+		error_exit("malloc error", p_begin);
+	return (word);
+}
+
+char	*dup_dollar(t_pipe_cmd *p_begin)
+{
+	char	*word;
+
+	word = ft_strdup("$");
+	if (!word)
+		error_exit("malloc error", p_begin);
+	return (word);
+}
+
+char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quo)
 {
 	char	*word;
 	int		i;
 	int		j;
-	// char	*tmp_word;
+	char	*tmp_word;
 
 	if (is_space(cmd[p->i]) || cmd[p->i] == 0)
-	{
-		if (tmp)
-			free (tmp);
-		tmp = ft_strdup("$");
-		if (!tmp)
-			error_exit("malloc error", p_begin);
-		return (tmp);
-	}
-	// tmp_word = get_next_word(cmd, p, p_cmd_start);
-	word = malloc(sizeof(char) * (ft_strlen(tmp) + 2));
+		return (dup_dollar(p_begin));
+	if (!d_quo)
+		tmp_word = get_next_word(cmd, p, p_begin);
+	else
+		tmp_word = gnw_double_quotes(p, cmd, p_begin);
+	word = malloc(sizeof(char) * (ft_strlen(tmp_word) + 2));
 	if (!word)
 		error_exit("malloc error", p_begin);
 	i = 1;
 	j = 0;
 	word[0] = '$';
-	while (tmp[i - 1])
-		word[i++] = tmp[j++];
+	while (tmp_word[i - 1])
+		word[i++] = tmp_word[j++];
 	word[i] = 0;
-	free(tmp);
+	free(tmp_word);
 	return (word);
-}
-
-char	*get_env_var(int index)
-{
-	char	*var_value;
-	int		j;
-
-	j = 0;
-	while (myenv[index][j] != '=' && myenv[index][j])
-		j++;
-	var_value = ft_strdup(myenv[index] + j + 1);
-	if (!var_value)
-		return (NULL);
-	return (var_value);
 }
 
 char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
 {
-	char 	*var_name;
+	char	*var_name;
 	int		start;
 	int		j;
-	char 	*var_value;
+	char	*var_value;
 
 	j = 0;
 	start = p->i;
@@ -69,23 +75,8 @@ char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start)
 	return (var_value);
 }
 
-char	*gnw_double_quotes(t_pars *p, char *cmd, t_pipe_cmd *p_begin)
-{
-	char	*word;
-	int		start;
-
-	start = p->i;
-	while (!is_space(cmd[p->i]) && cmd[p->i] != '"')
-		p->i++;
-	word = ft_strdup_len(cmd + start, p->i - start);
-	if (!word)
-		error_exit("malloc error", p_begin);
-	return (word);
-}
-
 char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quotes)
 {
-	char	*tmp;
 	char	*word;
 
 	p->i += 1;
@@ -96,11 +87,7 @@ char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quotes)
 	}
 	if (!valid_var_char(cmd[p->i]))
 	{
-		if (d_quotes == 1)	// gnw jusque espace ou ""
-			tmp = gnw_double_quotes(p, cmd, p_begin);
-		else	// gnw classique
-			tmp = get_next_word(cmd, p, p_begin);
-		word = unvalid_var_name(p, cmd, p_begin, tmp);
+		word = unvalid_var_name(p, cmd, p_begin, d_quotes);
 	}
 	else
 		word = valid_var_name(p, cmd, p_begin);

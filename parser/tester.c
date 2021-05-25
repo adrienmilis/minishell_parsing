@@ -3,24 +3,6 @@
 int nb_of_tests = 0;
 char **myenv;
 
-static int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (!s1 && !s2)
-		return (0);
-	else if ((!s1 && s2) || (s1 && !s2))
-		return (1);
-	while (s1[i] != 0 && s2[i] != 0)
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
-		i++;
-	}
-	return (s1[i] - s2[i]);
-}
-
 static void semicolon_tester()
 {
 	printf("---SEMICOLONS TESTER---\n");
@@ -78,7 +60,8 @@ static void	quotes_tester()
 		"echo \"\"\"bonjour\"",
 		"echo \\\' salut",
 		"ec\"ho\" bjr slt",
-		"echo \" \' \' \\\" \\\" \\\" \' \' \' \" \'\'"
+		"echo \" \' \' \\\" \\\" \\\" \' \' \' \" \'\'",
+		"echo \\\"test"
 	};
 	char	unvalid_cmds[50][100] =
 	{
@@ -87,11 +70,12 @@ static void	quotes_tester()
 		"echo \"",
 		"echo \' salut \' \'",
 		"echo \" salut \" \"",
-		"echo \" \' \' \\\" \\\" \\\" \' \' \' \" \'\' \""
+		"echo \" \' \' \\\" \\\" \\\" \' \' \' \" \'\' \"",
+		"echo \\\\\"test"
 	};
 	int i = 0;
-	int	nb_of_valids = 9;
-	int	nb_of_invalids = 6;
+	int	nb_of_valids = 10;
+	int	nb_of_invalids = 7;
 	while ( i < nb_of_valids)
 	{
 		if (!quotes_are_closed(valid_cmds[i]))
@@ -282,7 +266,7 @@ static void gnw_tester()
 
 	p.i = 8;
 	word = get_next_word("var \\\\\\\\;salut", &p, NULL);
-	if (ft_strcmp(word, ""))
+	if (ft_strcmp(word, NULL))
 		printf("Error test 17 ; word is [%s]\n", word);
 
 	p.i = 4;

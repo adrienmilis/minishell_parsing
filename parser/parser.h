@@ -40,33 +40,36 @@ void	reserved_chars(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 void	out_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd);
 
 // parser.c
-t_pipe_cmd	*parser(char *cmd);
+t_pipe_cmd	*parser(char *cmd, int new_command);
 
 // add_arguments.c
-void		add_argument(char *word, t_pipe_cmd *p_begin, t_pars *p, char *cmd);
-char		*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start);
-char		*copy_next_word(char *cmd, t_pars *p, int word_size, t_pipe_cmd *p_cmd_start);
+void		add_argument2(char **new_args, int i, char *word, t_pipe_cmd *last);
 int			append_arg(t_pipe_cmd *lasts, char *word, char *tmp);
+void		add_argument(char *word, t_pipe_cmd *p_begin);
+char		*copy_next_word(char *cmd, t_pars *p, int word_size, t_pipe_cmd *p_cmd_start);
+char		*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start);
 
 // utils.c
 t_pipe_cmd	*init_pipe_list();
-void		init_pars_struct(t_pars *p);
+void		init_pars_struct(t_pars *p, int new_command);
 void		reset_pars_struct(t_pars *p);
 
 // check_syntax.c
-int		semicolons_valid(char *cmd);
-int		quotes_are_closed(char *cmd);
 void 	set_quotes(int i, char *cmd, t_pars *p);
+int		semicolons_valid(char *cmd);
 int		pipes_valid(char *cmd);
+int		quotes_are_closed(char *cmd);
 void	check_syntax(char *cmd);
 
 // check_chars.c
 int		is_space(char c);
 int		is_r_space(char *c, int i);
-int		is_reserved_char(char c, int dollar);
 int		is_r_resvd_char(char *c, int i, int dollar);
 int		is_quote(char c);
 int		is_r_quote(char *c, int i);
+
+// check_chars2.c
+int		is_reserved_char(char c, int dollar);
 int		is_unesc_char(char *c, int i);
 
 // linked_list.c
@@ -83,14 +86,17 @@ int		ft_strlen(char *str);
 int		is_number(char c);
 int		is_letter(char c);
 int		valid_var_char(char c);
+int		ft_strcmp(char *s1, char *s2);
 
-// env.c 
+// env.c
+char	*get_env_var(int index);
 int		strcmp_env(char *s1, char *s2);
 char	**new_env(char **env);
 
 // env_vars.c
-char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, char *tmp);
-char	*get_env_var(int index);
+char	*gnw_double_quotes(t_pars *p, char *cmd, t_pipe_cmd *p_begin);
+char	*dup_dollar(t_pipe_cmd *p_begin);
+char 	*unvalid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quo);
 char	*valid_var_name(t_pars *p, char *cmd, t_pipe_cmd *p_cmd_start);
 char	*get_variable(t_pars *p, char *cmd, t_pipe_cmd *p_begin, int d_quotes);
 

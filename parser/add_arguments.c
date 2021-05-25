@@ -11,10 +11,10 @@ void	add_argument2(char **new_args, int i, char *word, t_pipe_cmd *last)
 	free(tmp);
 }
 
-void	add_argument(char *word, t_pipe_cmd *p_begin, t_pars *p, char *cmd)
+void	add_argument(char *word, t_pipe_cmd *p_begin)
 {
-	int		i;
-	char	**new_args;
+	int			i;
+	char		**new_args;
 	t_pipe_cmd	*last;
 
 	if (!word)
@@ -49,7 +49,8 @@ int	append_arg(t_pipe_cmd *last, char *word, char *tmp)	// proteger le retour
 	i = 0;
 	while (last->cmd[i])
 		i++;
-	cat_arg = malloc((ft_strlen(last->cmd[i - 1]) + ft_strlen(word) + 1) * sizeof(char)); // pb avec strlen si last->cmd est null
+	cat_arg = malloc((ft_strlen(last->cmd[i - 1])
+				+ ft_strlen(word) + 1) * sizeof(char));
 	if (!cat_arg)
 		return (0);
 	j = 0;
@@ -72,6 +73,8 @@ char	*copy_next_word(char *cmd, t_pars *p, int wd_size, t_pipe_cmd *p_start)
 	char	*word;
 	int		j;
 
+	if (wd_size == 1)
+		return (NULL);
 	word = malloc(sizeof(char) * wd_size);
 	if (!word)
 		error_exit("malloc error", p_start);
@@ -105,7 +108,7 @@ char	*get_next_word(char *cmd, t_pars *p, t_pipe_cmd *p_cmd_start)	// renvoie NU
 	j = p->i;
 	while (!is_r_space(&cmd[j], j)
 		&& !is_r_resvd_char(&cmd[j], j, 1)
-		&& !is_r_quote(&cmd[j], j) && cmd[j])
+		&& !is_r_quote(&cmd[j], j) && cmd[j])	// et cmd[j] ?? 
 	{
 		if (!is_unesc_char(&cmd[j], j))
 			escaped++;

@@ -2,7 +2,7 @@
 
 // parsing struct
 
-t_pipe_cmd	*init_pipe_list()
+t_pipe_cmd	*init_pipe_list(void)
 {
 	t_pipe_cmd	*p_cmd_start;
 
@@ -17,11 +17,13 @@ t_pipe_cmd	*init_pipe_list()
 	return (p_cmd_start);
 }
 
-void	init_pars_struct(t_pars *p)
+void	init_pars_struct(t_pars *p, int new_command)
 {
 	p->in_d_quotes = 0;
 	p->in_s_quotes = 0;
 	p->semicolon = 0;
+	if (new_command)
+		p->i = 0;
 }
 
 void	reset_pars_struct(t_pars *p)

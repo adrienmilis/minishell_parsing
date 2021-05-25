@@ -23,7 +23,7 @@ void	arg_simple_quotes(t_pars *p, t_pipe_cmd *p_cmd_start, char *cmd)
 		}
 	}
 	else
-		add_argument(new_arg, p_cmd_start, p, cmd);
+		add_argument(new_arg, p_cmd_start);
 	p->i += 1;
 	p->in_s_quotes = 0;
 }

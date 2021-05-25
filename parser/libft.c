@@ -1,5 +1,23 @@
 #include "parser.h"
 
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	if (!s1 && !s2)
+		return (0);
+	else if ((!s1 && s2) || (s1 && !s2))
+		return (1);
+	while (s1[i] != 0 && s2[i] != 0)
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (s1[i] - s2[i]);
+}
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str_cat;
@@ -10,8 +28,9 @@ char	*ft_strjoin(char *s1, char *s2)
 		s1 = ft_strdup("");
 	if (s2 == NULL)
 		s2 = ft_strdup("");
-	if (!(str_cat = malloc((ft_strlen((char*)s1) +
-			ft_strlen((char*)s2) + 1) * sizeof(char))))
+	str_cat = malloc((ft_strlen((char *)s1)
+				+ ft_strlen((char *)s2) + 1) * sizeof(char));
+	if (!str_cat)
 		return (NULL);
 	i = 0;
 	j = 0;
@@ -74,25 +93,4 @@ int	ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
-
-int	is_number(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
-int is_letter(char c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	return (0);
-}
-
-int	valid_var_char(char c)
-{
-	if (is_number(c) || is_letter(c) || c == '_' || c == '?')
-		return (1);
-	return (0);
 }

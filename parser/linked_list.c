@@ -25,7 +25,7 @@ void	ft_lstadd_back(t_pipe_cmd **begin_list, t_pipe_cmd *new_elem)
 	last_elem->next = new_elem;
 }
 
-t_pipe_cmd	*new_elem()
+t_pipe_cmd	*new_elem(void)
 {
 	t_pipe_cmd	*elem;
 

@@ -9,7 +9,7 @@ void	doubleq_special(t_pars *p, char *cmd, t_pipe_cmd *p_begin, char **buff)
 	else if (cmd[p->i] == '\\')
 	{
 		p->i += 1;
-		if (!(cmd[p->i] != '"' && cmd[p->i] != '\\' && cmd[p->i] != '$'))
+		if (cmd[p->i] != '"' && cmd[p->i] != '\\' && cmd[p->i] != '$')
 		{
 			*buff = ft_strjoin(*buff, ft_strdup("\\"));
 			if (!(*buff))
@@ -31,16 +31,16 @@ char	*make_dquotes_arg(t_pars *p, char *cmd, t_pipe_cmd *p_begin)
 	char	*tmp;
 	int		start;
 
-	start = p->i;
 	buff = NULL;
 	while (!(is_unesc_char(&cmd[p->i], p->i) && cmd[p->i] == '"'))
 	{
+		start = p->i;
 		while (cmd[p->i] != '"' && cmd[p->i] != '\\' && cmd[p->i] != '$')
 			p->i += 1;
 		tmp = ft_strdup_len(cmd + start, p->i - start);
 		if (!tmp)
 			error_exit("malloc error", p_begin);
-		buff = ft_strjoin(tmp, buff);
+		buff = ft_strjoin(buff, tmp);
 		if (!buff)
 		{
 			free(tmp);
@@ -68,7 +68,7 @@ void	arg_double_quotes(t_pars *p, t_pipe_cmd *p_begin, char *cmd)
 		}
 	}
 	else
-		add_argument(new_arg, p_begin, p, cmd);
+		add_argument(new_arg, p_begin);
 	p->i += 1;
 	p->in_d_quotes = 0;
 }
@@ -84,7 +84,7 @@ void	in_double_quotes(t_pars *p, t_pipe_cmd *p_begin, char *cmd)
 		arg_double_quotes(p, p_begin, cmd);
 }
 
-t_pipe_cmd	*parser(char *cmd)
+t_pipe_cmd	*parser(char *cmd, int new_command)
 {
 	t_pipe_cmd		*p_cmd_start;
 	static t_pars	p;
@@ -92,7 +92,7 @@ t_pipe_cmd	*parser(char *cmd)
 	if (!cmd || !cmd[0])
 		return (NULL);
 	check_syntax(cmd);
-	init_pars_struct(&p);
+	init_pars_struct(&p, new_command);
 	p_cmd_start = init_pipe_list();
 	while (!p.semicolon && cmd[p.i])
 	{

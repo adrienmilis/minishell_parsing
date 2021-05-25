@@ -1,25 +1,39 @@
 #include "parser.h"
 
-int        strcmp_env(char *s1, char *s2)
+char	*get_env_var(int index)
 {
-    size_t            i;
-    unsigned char    last_char_s1;
-    unsigned char    last_char_s2;
+	char	*var_value;
+	int		j;
 
-    i = 0;
-    while (s1[i] && s2[i] && s1[i] != '=' && s2[i] != '=')
-    {
-        if (s1[i] != s2[i])
-            return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-        i++;
-    }
-    last_char_s1 = s1[i];
-    last_char_s2 = s2[i];
-    if (last_char_s1 == '=')
-        last_char_s1 = '\0';
-    if (last_char_s2 == '=')
-        last_char_s2 = '\0';
-    return (last_char_s1 - last_char_s2);
+	j = 0;
+	while (myenv[index][j] != '=' && myenv[index][j])
+		j++;
+	var_value = ft_strdup(myenv[index] + j + 1);
+	if (!var_value)
+		return (NULL);
+	return (var_value);
+}
+
+int	strcmp_env(char *s1, char *s2)
+{
+	size_t			i;
+	unsigned char	last_char_s1;
+	unsigned char	last_char_s2;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] != '=' && s2[i] != '=')
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	last_char_s1 = s1[i];
+	last_char_s2 = s2[i];
+	if (last_char_s1 == '=')
+		last_char_s1 = '\0';
+	if (last_char_s2 == '=')
+		last_char_s2 = '\0';
+	return (last_char_s1 - last_char_s2);
 }
 
 static size_t	strtablen(char **tab)
