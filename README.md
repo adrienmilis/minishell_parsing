@@ -61,30 +61,5 @@ and whatever is after are concatenated
 
 - Input redirection from a file that doesn't exist
 
-### Parsing
-
-
-
-## Method (so far)
-
-1) Check quotes are matched, then check semi-colons
-2) Start parsing. In the while, 2 functions :
-- One to use if we're in quotes
-- One to use if we're out of quotes
-3) Return the parsed list
-
-**OUT QUOTES**
-- append OR add new arg while (!is_reserved_char (<, >, ;, |)) AND while (!is_quote) AND while (!is_space)
-
-if (unescaped space) : on rappelle la fct (avec append == 0)
-
-if (char) : new arg OR append (en fct de la variable append)
-
-if (reserved char) :
-- if (|) : add new elem to list 
-- if (;) : return our list
-- if (> < >>) : modify input, output and double_greater with next word (fonction get_next_word())
-
-**IN QUOTES**
 
 
