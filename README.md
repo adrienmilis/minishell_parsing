@@ -1,4 +1,8 @@
-# minishell
+# minishell parser
+
+Parses shell commands and returns a linked list for execution of said commands.
+
+Syntax rules include single quotes, double quotes, semicolons, environment variables, pipes, redirections (<, >, >>)
 
 ## Syntax rules
 
